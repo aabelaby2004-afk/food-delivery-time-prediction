@@ -13,12 +13,14 @@ A machine-learning project that estimates food delivery time using an optimized 
 
 ## Streamlit application
 
-Customers enter:
+Customers enter all five model inputs:
 - Restaurant-to-customer distance (km)
+- Delivery-person age (years)
+- Delivery-person rating (out of 5)
 - Order type
 - Delivery vehicle
 
-Delivery-person age and rating are fixed representative inputs (29 years and 4.7/5). The app discloses these assumptions.
+The age and rating fields start with editable example values (29 years and 4.7/5). These are defaults, not live courier details; users should replace them with actual values when available.
 
 ## Project files
 
