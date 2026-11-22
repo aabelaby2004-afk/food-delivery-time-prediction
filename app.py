@@ -469,6 +469,23 @@ with left:
         unsafe_allow_html=True,
     )
 
+    # Keep the vehicle selector outside the form so its warning updates
+    # immediately when the customer changes the selected vehicle.
+    vehicle_type = st.selectbox(
+        "Delivery vehicle",
+        options=config["vehicle_categories"],
+        index=config["vehicle_categories"].index(defaults["vehicle_type"]),
+        format_func=lambda value: value.replace("_", " ").title(),
+    )
+
+    if vehicle_type == "bicycle":
+        st.warning(
+            "Low-confidence estimate: the training dataset contains very few "
+            "bicycle delivery records compared with other vehicle types. "
+            "The estimated time for bicycle deliveries may be unreliable, "
+            "so treat it as a rough indication rather than a dependable ETA."
+        )
+
     with st.form("delivery_prediction_form"):
         distance = st.number_input(
             "Restaurant to customer distance (km)",
@@ -502,21 +519,11 @@ with left:
                 help="Enter the delivery person's rating. The model was trained on ratings from 1.0 to 5.0.",
             )
 
-        form_col1, form_col2 = st.columns(2)
-        with form_col1:
-            order_type = st.selectbox(
-                "Order type",
-                options=config["order_categories"],
-                index=config["order_categories"].index(defaults["order_type"]),
-            )
-
-        with form_col2:
-            vehicle_type = st.selectbox(
-                "Delivery vehicle",
-                options=config["vehicle_categories"],
-                index=config["vehicle_categories"].index(defaults["vehicle_type"]),
-                format_func=lambda value: value.replace("_", " ").title(),
-            )
+        order_type = st.selectbox(
+            "Order type",
+            options=config["order_categories"],
+            index=config["order_categories"].index(defaults["order_type"]),
+        )
 
         submitted = st.form_submit_button(
             "✦  Estimate delivery time",
@@ -639,13 +646,6 @@ if "last_prediction" in st.session_state:
             f"({distance_min:.1f}–{distance_max:.1f} km). The estimate may be less reliable."
         )
 
-    if result["vehicle_type"] == "bicycle":
-        st.warning(
-            "Low-confidence estimate: the training dataset contains very few "
-            "bicycle delivery records compared with other vehicle types. "
-            "The estimated time for bicycle deliveries may be unreliable, "
-            "so treat it as a rough indication rather than a dependable ETA."
-        )
 else:
     st.markdown(
         """
