@@ -1,0 +1,47 @@
+{
+  "feature_columns": [
+    "Delivery_person_Age",
+    "Delivery_person_Ratings",
+    "distance_km",
+    "Type_of_order_Drinks",
+    "Type_of_order_Meal",
+    "Type_of_order_Snack",
+    "Type_of_vehicle_electric_scooter",
+    "Type_of_vehicle_motorcycle",
+    "Type_of_vehicle_scooter"
+  ],
+  "metrics": {
+    "mae_minutes": 5.665944576263428,
+    "rmse_minutes": 7.206183258038717,
+    "r2_percent": 39.726752042770386,
+    "cv_rmse_minutes": 7.216781520843506
+  },
+  "best_params": {
+    "learning_rate": 0.05,
+    "max_depth": 3,
+    "n_estimators": 200
+  },
+  "defaults": {
+    "delivery_person_age": 29.0,
+    "delivery_person_rating": 4.7,
+    "order_type": "Snack",
+    "vehicle_type": "motorcycle"
+  },
+  "order_categories": [
+    "Buffet",
+    "Drinks",
+    "Meal",
+    "Snack"
+  ],
+  "vehicle_categories": [
+    "bicycle",
+    "electric_scooter",
+    "motorcycle",
+    "scooter"
+  ],
+  "training_distance_range_km": [
+    1.4650674052309467,
+    20.969489380087342
+  ],
+  "training_rows": 41953
+}
