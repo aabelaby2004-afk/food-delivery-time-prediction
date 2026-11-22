@@ -568,6 +568,14 @@ if "last_prediction" in st.session_state:
             f"This distance is outside the range represented in the training data "
             f"({distance_min:.1f}–{distance_max:.1f} km). The estimate may be less reliable."
         )
+
+    if result["vehicle_type"] == "bicycle":
+        st.warning(
+            "Low-confidence estimate: the training dataset contains very few "
+            "bicycle delivery records compared with other vehicle types. "
+            "The estimated time for bicycle deliveries may be unreliable, "
+            "so treat it as a rough indication rather than a dependable ETA."
+        )
 else:
     st.markdown(
         """
