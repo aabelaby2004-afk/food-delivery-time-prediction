@@ -359,6 +359,49 @@ st.markdown(
             padding: 1rem;
         }
     }
+    
+    /* Keep dropdown popups readable and consistent with the light interface. */
+    div[data-baseweb="popover"],
+    div[data-baseweb="popover"] > div,
+    div[data-baseweb="menu"],
+    ul[role="listbox"] {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        color: #172033 !important;
+        border-color: #e5eaf2 !important;
+        border-radius: 14px !important;
+        box-shadow: 0 14px 34px rgba(23, 42, 79, 0.16) !important;
+    }
+
+    ul[role="listbox"] {
+        padding: 6px !important;
+    }
+
+    li[role="option"],
+    div[role="option"] {
+        background: #ffffff !important;
+        color: #172033 !important;
+        border-radius: 9px !important;
+        font-family: 'DM Sans', sans-serif !important;
+    }
+
+    li[role="option"]:hover,
+    div[role="option"]:hover {
+        background: #eef4ff !important;
+        color: #173a9c !important;
+    }
+
+    li[role="option"][aria-selected="true"],
+    div[role="option"][aria-selected="true"] {
+        background: #e7efff !important;
+        color: #173a9c !important;
+        font-weight: 700 !important;
+    }
+
+    div[data-baseweb="popover"] * {
+        color-scheme: light;
+    }
+
     </style>
     """,
     unsafe_allow_html=True,
