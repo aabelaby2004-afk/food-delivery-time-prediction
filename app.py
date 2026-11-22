@@ -480,6 +480,28 @@ with left:
             help="Enter the delivery distance in kilometres.",
         )
 
+        courier_col1, courier_col2 = st.columns(2)
+        with courier_col1:
+            delivery_age = st.number_input(
+                "Delivery person's age (years)",
+                min_value=20,
+                max_value=50,
+                value=int(defaults["delivery_person_age"]),
+                step=1,
+                help="Enter the actual delivery person's age. The available training data covers ages 20–50 after cleaning.",
+            )
+
+        with courier_col2:
+            delivery_rating = st.number_input(
+                "Delivery person's rating (out of 5)",
+                min_value=1.0,
+                max_value=5.0,
+                value=float(defaults["delivery_person_rating"]),
+                step=0.1,
+                format="%.1f",
+                help="Enter the delivery person's rating. The model was trained on ratings from 1.0 to 5.0.",
+            )
+
         form_col1, form_col2 = st.columns(2)
         with form_col1:
             order_type = st.selectbox(
@@ -508,25 +530,26 @@ with right:
         f"""
         <div class="info-card">
             <div class="eyebrow">02 · Behind the estimate</div>
-            <h3>A little context goes a long way.</h3>
+            <h3>Five inputs shape your estimate.</h3>
             <p>
-                The model uses five features. You provide three of them;
-                two delivery-person details are held at fixed representative values.
+                The XGBoost model uses distance, courier age, courier rating,
+                order type and delivery vehicle.
             </p>
             <div class="fixed-grid">
                 <div class="fixed-item">
-                    <div class="fixed-label">Age · fixed</div>
+                    <div class="fixed-label">Age · editable</div>
                     <div class="fixed-value">{defaults['delivery_person_age']:.0f} yrs</div>
                 </div>
                 <div class="fixed-item">
-                    <div class="fixed-label">Rating · fixed</div>
+                    <div class="fixed-label">Rating · editable</div>
                     <div class="fixed-value">{defaults['delivery_person_rating']:.1f}/5</div>
                 </div>
             </div>
             <div class="note-box">
                 <strong>Good to know</strong><br>
-                Age and rating are assumptions, not details about the actual
-                delivery person. The prediction is an estimate, not a guarantee.
+                The age and rating fields start with example values that you can
+                change. They are not live courier details. Use actual values when
+                available; avoid guessing. The prediction is an estimate, not a guarantee.
             </div>
         </div>
         """,
@@ -538,8 +561,8 @@ with right:
 if submitted:
     input_row = pd.DataFrame(
         {
-            "Delivery_person_Age": [defaults["delivery_person_age"]],
-            "Delivery_person_Ratings": [defaults["delivery_person_rating"]],
+            "Delivery_person_Age": [delivery_age],
+            "Delivery_person_Ratings": [delivery_rating],
             "distance_km": [distance],
             "Type_of_order": pd.Categorical(
                 [order_type],
@@ -576,6 +599,8 @@ if submitted:
     st.session_state["last_prediction"] = {
         "minutes": predicted_minutes,
         "distance": distance,
+        "delivery_age": delivery_age,
+        "delivery_rating": delivery_rating,
         "order_type": order_type,
         "vehicle_type": vehicle_type,
     }
@@ -598,6 +623,8 @@ if "last_prediction" in st.session_state:
             <div class="result-caption">Your estimated arrival time, based on the details entered.</div>
             <div class="result-tags">
                 <span class="result-tag">📍 {result['distance']:.1f} km</span>
+                <span class="result-tag">👤 {result['delivery_age']} yrs</span>
+                <span class="result-tag">⭐ {result['delivery_rating']:.1f}/5</span>
                 <span class="result-tag">🍱 {result_order}</span>
                 <span class="result-tag">🛵 {result_vehicle}</span>
             </div>
@@ -654,10 +681,10 @@ with st.expander("📊  Model performance and technical details"):
 
 with st.expander("ℹ️  How the estimate is calculated"):
     st.write(
-        "The application sends distance, order type and vehicle type to the saved "
-        "XGBoost model. It applies the same one-hot encoding and feature order used "
-        "during training. Delivery-person age and rating remain fixed at the values "
-        "shown above."
+        "The application sends distance, delivery-person age, delivery-person rating, "
+        "order type and vehicle type to the saved XGBoost model. It applies the same "
+        "one-hot encoding and feature order used during training. The prefilled age "
+        "and rating are editable example values, not live courier data."
     )
     st.caption(
         "Real delivery times can also be affected by traffic, weather, restaurant "
