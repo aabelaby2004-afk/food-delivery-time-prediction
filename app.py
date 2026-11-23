@@ -488,13 +488,21 @@ with left:
 
     with st.form("delivery_prediction_form"):
         distance = st.number_input(
-            "Restaurant to customer distance (km)",
+            "Straight-line distance between restaurant and customer (km)",
             min_value=0.1,
             max_value=100.0,
             value=5.0,
             step=0.1,
             format="%.1f",
-            help="Enter the delivery distance in kilometres.",
+            help=(
+                "Enter the direct point-to-point distance, not the road or "
+                "Google Maps driving distance. The model was trained using "
+                "Haversine straight-line distance calculated from coordinates."
+            ),
+        )
+        st.caption(
+            "Use the direct geographic distance (as the crow flies), not the "
+            "driving or walking route distance."
         )
 
         courier_col1, courier_col2 = st.columns(2)
@@ -539,7 +547,7 @@ with right:
             <div class="eyebrow">02 · Behind the estimate</div>
             <h3>Five inputs shape your estimate.</h3>
             <p>
-                The XGBoost model uses distance, courier age, courier rating,
+                The XGBoost model uses Haversine straight-line distance, courier age, courier rating,
                 order type and delivery vehicle.
             </p>
             <div class="fixed-grid">
@@ -629,7 +637,7 @@ if "last_prediction" in st.session_state:
             <div class="result-number">{minutes:.1f} <span>minutes</span></div>
             <div class="result-caption">Your estimated arrival time, based on the details entered.</div>
             <div class="result-tags">
-                <span class="result-tag">📍 {result['distance']:.1f} km</span>
+                <span class="result-tag">↔ {result['distance']:.1f} km straight-line</span>
                 <span class="result-tag">👤 {result['delivery_age']} yrs</span>
                 <span class="result-tag">⭐ {result['delivery_rating']:.1f}/5</span>
                 <span class="result-tag">🍱 {result_order}</span>
